@@ -1,7 +1,7 @@
 package org.pistonmc.protocol.v5;
 
+import org.pistonmc.plugin.protocol.Protocol;
 import org.pistonmc.protocol.Client;
-import org.pistonmc.stickypiston.network.protocol.Protocol;
 
 public class StickyProtocol extends Protocol {
 
