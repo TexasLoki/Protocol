@@ -5,6 +5,10 @@ import org.pistonmc.stickypiston.network.protocol.Protocol;
 
 public class StickyProtocol extends Protocol {
 
+    public StickyProtocol() {
+        this(null);
+    }
+
     public StickyProtocol(Client client) {
         super(client);
     }

@@ -1,0 +1,2 @@
+version: 5
+main: org.pistonmc.protocol.v5.StickyProtocol
