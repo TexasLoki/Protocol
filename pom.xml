@@ -29,7 +29,7 @@
     <dependencies>
         <dependency>
             <groupId>org.pistonmc</groupId>
-            <artifactId>piston</artifactId>
+            <artifactId>stickypiston</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
