@@ -4,36 +4,25 @@ import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.protocol.packet.OutgoingPacket;
 import org.pistonmc.protocol.packet.ProtocolState;
 import org.pistonmc.protocol.stream.PacketOutputStream;
-import org.pistonmc.protocol.v5.play.server.groups.PacketPlayOutPlayer;
 
 import java.io.IOException;
 
-public class PacketPlayOutJoinGame extends PacketPlayOutPlayer {
+public class PacketPlayOutRespawn extends OutgoingPacket {
 
-    private int gamemode;
-    private byte dimension;
+    private int dimension;
     private int difficulty;
-    private int maxPlayers;
+    private int gamemode;
     private String level;
 
-    public PacketPlayOutJoinGame(int entity, int gamemode, byte dimension, int difficulty, int maxPlayers, String level) {
-        super(0x01, entity);
-        this.gamemode = gamemode;
+    public PacketPlayOutRespawn(int dimension, int difficulty, int gamemode, String level) {
+        super(ProtocolState.PLAY, 0x07);
         this.dimension = dimension;
         this.difficulty = difficulty;
-        this.maxPlayers = maxPlayers;
+        this.gamemode = gamemode;
         this.level = level;
     }
 
-    public int getEntity() {
-        return entity;
-    }
-
-    public int getGamemode() {
-        return gamemode;
-    }
-
-    public byte getDimension() {
+    public int getDimension() {
         return dimension;
     }
 
@@ -41,8 +30,8 @@ public class PacketPlayOutJoinGame extends PacketPlayOutPlayer {
         return difficulty;
     }
 
-    public int getMaxPlayers() {
-        return maxPlayers;
+    public int getGamemode() {
+        return gamemode;
     }
 
     public String getLevel() {
@@ -51,11 +40,9 @@ public class PacketPlayOutJoinGame extends PacketPlayOutPlayer {
 
     @Override
     public void write(PacketOutputStream stream) throws PacketException, IOException {
-        super.write(stream);
-        stream.writeUnsignedByte(gamemode);
-        stream.writeByte(dimension);
+        stream.writeInt(dimension);
         stream.writeUnsignedByte(difficulty);
-        stream.writeUnsignedByte(maxPlayers);
+        stream.writeUnsignedByte(gamemode);
         stream.writeString(level);
     }
 

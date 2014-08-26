@@ -1,6 +1,5 @@
 package org.pistonmc.protocol.v5.play.server;
 
-import org.json.JSONObject;
 import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.protocol.packet.OutgoingPacket;
 import org.pistonmc.protocol.packet.ProtocolState;
@@ -8,22 +7,29 @@ import org.pistonmc.protocol.stream.PacketOutputStream;
 
 import java.io.IOException;
 
-public class PacketPlayOutChatMessage extends OutgoingPacket {
+public class PacketPlayOutTimeUpdate extends OutgoingPacket {
 
-    private JSONObject json;
+    private long age;
+    private long time;
 
-    public PacketPlayOutChatMessage(JSONObject json) {
-        super(ProtocolState.PLAY, 0x02);
-        this.json = json;
+    public PacketPlayOutTimeUpdate(long age, long time) {
+        super(ProtocolState.PLAY, 0x03);
+        this.age = age;
+        this.time = time;
     }
 
-    public JSONObject getJSON() {
-        return json;
+    public long getAge() {
+        return age;
+    }
+
+    public long getTime() {
+        return time;
     }
 
     @Override
     public void write(PacketOutputStream stream) throws PacketException, IOException {
-        stream.writeString(json.toString(4));
+        stream.writeLong(age);
+        stream.writeLong(time);
     }
 
 }

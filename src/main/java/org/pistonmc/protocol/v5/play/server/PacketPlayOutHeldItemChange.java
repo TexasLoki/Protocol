@@ -1,6 +1,5 @@
 package org.pistonmc.protocol.v5.play.server;
 
-import org.json.JSONObject;
 import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.protocol.packet.OutgoingPacket;
 import org.pistonmc.protocol.packet.ProtocolState;
@@ -8,22 +7,22 @@ import org.pistonmc.protocol.stream.PacketOutputStream;
 
 import java.io.IOException;
 
-public class PacketPlayOutChatMessage extends OutgoingPacket {
+public class PacketPlayOutHeldItemChange extends OutgoingPacket {
 
-    private JSONObject json;
+    private int slot;
 
-    public PacketPlayOutChatMessage(JSONObject json) {
-        super(ProtocolState.PLAY, 0x02);
-        this.json = json;
+    public PacketPlayOutHeldItemChange(int slot) {
+        super(ProtocolState.PLAY, 0x09);
+        this.slot = slot;
     }
 
-    public JSONObject getJSON() {
-        return json;
+    public int getSlot() {
+        return slot;
     }
 
     @Override
     public void write(PacketOutputStream stream) throws PacketException, IOException {
-        stream.writeString(json.toString(4));
+        stream.writeByte(slot);
     }
 
 }
