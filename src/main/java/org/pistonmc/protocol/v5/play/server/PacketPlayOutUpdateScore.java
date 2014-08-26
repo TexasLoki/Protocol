@@ -10,14 +10,14 @@ import java.io.IOException;
 public class PacketPlayOutUpdateScore extends OutgoingPacket {
 
 	private String itemName;
-	private byte updateRemove;
+	private byte uor;
 	private String scoreName;
 	private int value;
 
-	public PacketPlayOutUpdateScore(String itemName, byte updateRemove, String scoreName, int value) {
+	public PacketPlayOutUpdateScore(String itemName, byte uor, String scoreName, int value) {
 		super(ProtocolState.PLAY, 0x3C);
 		this.itemName = itemName;
-		this.updateRemove = updateRemove;
+		this.uor = uor;
 		this.scoreName = scoreName;
 		this.value = value;
 	}
@@ -25,7 +25,7 @@ public class PacketPlayOutUpdateScore extends OutgoingPacket {
 	@Override
 	public void write(PacketOutputStream stream) throws PacketException, IOException {
 		stream.writeString(itemName);
-		stream.writeByte(updateRemove);
+		stream.writeByte(uor);
 		stream.writeString(scoreName);
 		stream.writeInt(value);
 	}
@@ -34,8 +34,8 @@ public class PacketPlayOutUpdateScore extends OutgoingPacket {
 		return itemName;
 	}
 
-	public byte getUpdateRemove() {
-		return updateRemove;
+	public byte getUpdateOrRemove() {
+		return uor;
 	}
 
 	public String getScoreName() {
