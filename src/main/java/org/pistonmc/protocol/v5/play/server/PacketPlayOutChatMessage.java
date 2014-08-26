@@ -13,7 +13,7 @@ public class PacketPlayOutChatMessage extends OutgoingPacket {
     private JSONObject json;
 
     public PacketPlayOutChatMessage(JSONObject json) {
-        super(ProtocolState.PLAY, 0x00);
+        super(ProtocolState.PLAY, 0x02);
         this.json = json;
     }
 
