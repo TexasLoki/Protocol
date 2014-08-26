@@ -22,7 +22,7 @@ public class PacketPlayOutEntity extends OutgoingPacket {
 
     @Override
     public void write(PacketOutputStream stream) throws PacketException, IOException {
-        stream.writeVarInt(entity);
+        stream.writeInt(entity);
     }
 
 }

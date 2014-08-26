@@ -2,11 +2,11 @@ package org.pistonmc.protocol.v5.play.server;
 
 import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.protocol.stream.PacketOutputStream;
-import org.pistonmc.protocol.v5.play.server.groups.PacketPlayOutPlayer;
+import org.pistonmc.protocol.v5.play.server.groups.PacketPlayOutEntity;
 
 import java.io.IOException;
 
-public class PacketPlayOutEntityVelocity extends PacketPlayOutPlayer {
+public class PacketPlayOutEntityVelocity extends PacketPlayOutEntity {
 
     private int x;
     private int y;

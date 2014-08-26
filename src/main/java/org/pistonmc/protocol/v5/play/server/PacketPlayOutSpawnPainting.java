@@ -46,7 +46,7 @@ public class PacketPlayOutSpawnPainting extends PacketPlayOutEntity {
 
     @Override
     public void write(PacketOutputStream stream) throws PacketException, IOException {
-        super.write(stream);
+        stream.writeVarInt(entity);
         stream.writeString(title);
         stream.writeInt(x);
         stream.writeInt(y);

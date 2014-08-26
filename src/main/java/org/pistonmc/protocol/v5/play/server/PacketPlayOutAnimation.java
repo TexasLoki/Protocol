@@ -3,11 +3,11 @@ package org.pistonmc.protocol.v5.play.server;
 import org.pistonmc.data.Animation;
 import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.protocol.stream.PacketOutputStream;
-import org.pistonmc.protocol.v5.play.server.groups.PacketPlayOutEntity;
+import org.pistonmc.protocol.v5.play.server.groups.PacketPlayOutPlayer;
 
 import java.io.IOException;
 
-public class PacketPlayOutAnimation extends PacketPlayOutEntity {
+public class PacketPlayOutAnimation extends PacketPlayOutPlayer {
 
     private Animation animation;
 
@@ -22,7 +22,7 @@ public class PacketPlayOutAnimation extends PacketPlayOutEntity {
 
     @Override
     public void write(PacketOutputStream stream) throws PacketException, IOException {
-        super.write(stream);
+        stream.writeVarInt(entity);
         stream.writeUnsignedByte(animation.getId());
     }
 
