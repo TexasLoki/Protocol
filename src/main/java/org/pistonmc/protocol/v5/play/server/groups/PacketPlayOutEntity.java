@@ -11,6 +11,10 @@ public class PacketPlayOutEntity extends OutgoingPacket {
 
     protected int entity;
 
+    public PacketPlayOutEntity(int entity) {
+        this(0x14, entity);
+    }
+
     public PacketPlayOutEntity(int id, int entity) {
         super(ProtocolState.PLAY, id);
         this.entity = entity;
