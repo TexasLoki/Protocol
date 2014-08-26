@@ -10,7 +10,7 @@ import java.io.IOException;
 public class PacketPlayInUpdateSign extends IncomingPacket {
 
 	private int posX;
-	private short posY;
+	private int posY;
 	private int posZ;
 	private String[] lines;
 
@@ -34,8 +34,12 @@ public class PacketPlayInUpdateSign extends IncomingPacket {
 		return posX;
 	}
 
-	public short getPosY() {
+	public int getPosY() {
 		return posY;
+	}
+
+	public int getPosZ() {
+		return posZ;
 	}
 
 	public String[] getLines() {
