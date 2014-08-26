@@ -6,19 +6,13 @@ import org.pistonmc.protocol.v5.play.server.groups.PacketPlayOutEntity;
 
 import java.io.IOException;
 
-public class PacketPlayOutEntityLook extends PacketPlayOutEntity {
+public class PacketPlayOutEntityLook extends PacketPlayOutEntityHeadLook {
 
-    private float yaw;
     private float pitch;
 
     public PacketPlayOutEntityLook(int entity, float yaw, float pitch) {
-        super(0x16, entity);
-        this.yaw = yaw;
+        super(0x16, entity, yaw);
         this.pitch = pitch;
-    }
-
-    public float getYaw() {
-        return yaw;
     }
 
     public float getPitch() {
@@ -28,7 +22,6 @@ public class PacketPlayOutEntityLook extends PacketPlayOutEntity {
     @Override
     public void write(PacketOutputStream stream) throws PacketException, IOException {
         super.write(stream);
-        stream.writeRotation(yaw);
         stream.writeRotation(pitch);
     }
 
