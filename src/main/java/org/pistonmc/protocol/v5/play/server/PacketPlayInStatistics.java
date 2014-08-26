@@ -1,4 +1,4 @@
-package in.parapengu.craftbot.protocol.v4.play.server;
+package org.pistonmc.protocol.v5.play.server;
 
 import in.parapengu.craftbot.protocol.Destination;
 import in.parapengu.craftbot.protocol.Packet;
@@ -7,6 +7,8 @@ import in.parapengu.craftbot.protocol.stream.PacketInputStream;
 import in.parapengu.craftbot.protocol.stream.PacketOutputStream;
 
 import static in.parapengu.craftbot.protocol.v4.play.server.PacketPlayInStatistics.StatisticType.*;
+import static org.pistonmc.protocol.v5.play.server.PacketPlayInStatistics.StatisticType.ACHIEVEMENT;
+import static org.pistonmc.protocol.v5.play.server.PacketPlayInStatistics.StatisticType.STATISTIC;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package in.parapengu.craftbot.protocol.v4.status.server;
+package org.pistonmc.protocol.v5.status.server;
 
 import in.parapengu.craftbot.protocol.Destination;
 import in.parapengu.craftbot.protocol.Packet;

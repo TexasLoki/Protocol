@@ -1,4 +1,4 @@
-package in.parapengu.craftbot.protocol.v4.play.server;
+package org.pistonmc.protocol.v5.play.server;
 
 import com.google.common.collect.Lists;
 import in.parapengu.craftbot.protocol.stream.PacketInputStream;

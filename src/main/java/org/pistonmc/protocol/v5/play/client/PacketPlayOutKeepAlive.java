@@ -1,4 +1,4 @@
-package in.parapengu.craftbot.protocol.v4.play.client;
+package org.pistonmc.protocol.v5.play.client;
 
 import in.parapengu.craftbot.protocol.Destination;
 import in.parapengu.craftbot.protocol.Packet;
