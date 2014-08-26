@@ -12,7 +12,7 @@ public class PacketPlayOutAttachEntity extends PacketPlayOutEntity {
     private boolean leash;
 
     public PacketPlayOutAttachEntity(int entity, int vehicle, boolean leash) {
-        super(0x1A, entity);
+        super(0x1B, entity);
         this.vehicle = vehicle;
         this.leash = leash;
     }
