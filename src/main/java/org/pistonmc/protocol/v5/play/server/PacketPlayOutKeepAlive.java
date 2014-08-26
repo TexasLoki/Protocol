@@ -1,6 +1,5 @@
 package org.pistonmc.protocol.v5.play.server;
 
-import org.json.JSONObject;
 import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.protocol.packet.OutgoingPacket;
 import org.pistonmc.protocol.packet.ProtocolState;
@@ -8,18 +7,22 @@ import org.pistonmc.protocol.stream.PacketOutputStream;
 
 import java.io.IOException;
 
-public class PlayPlayOutChatMessage extends OutgoingPacket {
+public class PacketPlayOutKeepAlive extends OutgoingPacket {
 
-    private JSONObject json;
+    private int aliveId;
 
-    public PlayPlayOutChatMessage(JSONObject json) {
+    public PacketPlayOutKeepAlive() {
         super(ProtocolState.PLAY, 0x00);
-        this.json = json;
+        this.aliveId = (int) (System.nanoTime() / 1000000L);
+    }
+
+    public int getAliveId() {
+        return aliveId;
     }
 
     @Override
     public void write(PacketOutputStream stream) throws PacketException, IOException {
-        stream.writeString(json.toString(4));
+        stream.writeInt(aliveId);
     }
 
 }
