@@ -4,6 +4,7 @@ import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.plugin.protocol.Protocol;
 import org.pistonmc.protocol.PlayerConnection;
 import org.pistonmc.protocol.packet.Packet;
+import org.pistonmc.protocol.v5.play.client.*;
 
 public class StickyProtocol extends Protocol {
 
@@ -17,7 +18,13 @@ public class StickyProtocol extends Protocol {
 
     @Override
     public void onEnable() {
-        // add packets here using add(Packet)
+	    add(new PacketPlayInKeepAlive());
+	    add(new PacketPlayInChatMessage());
+	    add(new PacketPlayInUseEntity());
+	    add(new PacketPlayInPlayer());
+	    add(new PacketPlayInPlayerPosition());
+	    add(new PacketPlayInPlayerLook());
+	    add(new PacketPlayInPlayerPositionAndLook());
     }
 
     @Override
