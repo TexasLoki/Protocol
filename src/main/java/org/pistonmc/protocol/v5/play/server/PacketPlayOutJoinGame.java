@@ -4,12 +4,12 @@ import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.protocol.packet.OutgoingPacket;
 import org.pistonmc.protocol.packet.ProtocolState;
 import org.pistonmc.protocol.stream.PacketOutputStream;
+import org.pistonmc.protocol.v5.play.server.groups.PacketPlayOutPlayer;
 
 import java.io.IOException;
 
-public class PacketPlayOutJoinGame extends OutgoingPacket {
+public class PacketPlayOutJoinGame extends PacketPlayOutPlayer {
 
-    private int entity;
     private int gamemode;
     private byte dimension;
     private int difficulty;
@@ -17,8 +17,7 @@ public class PacketPlayOutJoinGame extends OutgoingPacket {
     private String level;
 
     public PacketPlayOutJoinGame(int entity, int gamemode, byte dimension, int difficulty, int maxPlayers, String level) {
-        super(ProtocolState.PLAY, 0x01);
-        this.entity = entity;
+        super(0x01, entity);
         this.gamemode = gamemode;
         this.dimension = dimension;
         this.difficulty = difficulty;
@@ -52,7 +51,7 @@ public class PacketPlayOutJoinGame extends OutgoingPacket {
 
     @Override
     public void write(PacketOutputStream stream) throws PacketException, IOException {
-        stream.writeInt(entity);
+        super.write(stream);
         stream.writeUnsignedByte(gamemode);
         stream.writeByte(dimension);
         stream.writeUnsignedByte(difficulty);
