@@ -25,6 +25,17 @@ public class StickyProtocol extends Protocol {
 	    add(new PacketPlayInPlayerPosition());
 	    add(new PacketPlayInPlayerLook());
 	    add(new PacketPlayInPlayerPositionAndLook());
+	    add(new PacketPlayInPlayerDigging());
+
+	    add(new PacketPlayInHeldItemChange());
+	    add(new PacketPlayInAnimation());
+
+	    add(new PacketPlayInSteerVehicle());
+	    add(new PacketPlayInCloseWindow());
+
+	    add(new PacketPlayInConfirmTransaction());
+
+	    add(new PacketPlayInEnchantItem());
     }
 
     @Override
