@@ -36,6 +36,7 @@ public class StickyProtocol extends Protocol {
 	    add(new PacketPlayInConfirmTransaction());
 
 	    add(new PacketPlayInEnchantItem());
+	    add(new PacketPlayInUpdateSign());
     }
 
     @Override
