@@ -17,7 +17,7 @@ public class StickyProtocol extends Protocol {
     }
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
 	    add(new PacketPlayInKeepAlive());
 	    add(new PacketPlayInChatMessage());
 	    add(new PacketPlayInUseEntity());
