@@ -9,19 +9,19 @@ import java.io.IOException;
 
 public class PacketPlayInCloseWindow extends IncomingPacket {
 
-	private byte windowId;
+    private byte windowId;
 
-	public PacketPlayInCloseWindow() {
-		super(ProtocolState.PLAY, 0x0D);
-	}
+    public PacketPlayInCloseWindow() {
+        super(ProtocolState.PLAY, 0x0D);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.windowId = packet.getStream().readByte();
-	}
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.windowId = packet.getStream().readByte();
+    }
 
-	public byte getWindowId() {
-		return windowId;
-	}
+    public byte getWindowId() {
+        return windowId;
+    }
 
 }

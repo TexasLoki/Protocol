@@ -10,25 +10,25 @@ import java.io.IOException;
 
 public class PacketPlayInAnimation extends IncomingPacket {
 
-	private int entityId;
-	private Animation animation;
+    private int entityId;
+    private Animation animation;
 
-	public PacketPlayInAnimation() {
-		super(ProtocolState.PLAY, 0x0A);
-	}
+    public PacketPlayInAnimation() {
+        super(ProtocolState.PLAY, 0x0A);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.entityId = packet.getStream().readInt();
-		this.animation = Animation.valueOf(packet.getStream().readByte());
-	}
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.entityId = packet.getStream().readInt();
+        this.animation = Animation.valueOf(packet.getStream().readByte());
+    }
 
-	public int getEntityId() {
-		return entityId;
-	}
+    public int getEntityId() {
+        return entityId;
+    }
 
-	public Animation getAnimation() {
-		return animation;
-	}
+    public Animation getAnimation() {
+        return animation;
+    }
 
 }

@@ -7,33 +7,33 @@ import org.pistonmc.protocol.packet.UnreadPacket;
 
 import java.io.IOException;
 
-public class PacketPlayInConfirmTransaction  extends IncomingPacket {
+public class PacketPlayInConfirmTransaction extends IncomingPacket {
 
-	private byte windowId;
-	private short actionNumber;
-	private boolean accepted;
+    private byte windowId;
+    private short actionNumber;
+    private boolean accepted;
 
-	public PacketPlayInConfirmTransaction() {
-		super(ProtocolState.PLAY, 0x0F);
-	}
+    public PacketPlayInConfirmTransaction() {
+        super(ProtocolState.PLAY, 0x0F);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.windowId = packet.getStream().readByte();
-		this.actionNumber = packet.getStream().readShort();
-		this.accepted = packet.getStream().readBoolean();
-	}
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.windowId = packet.getStream().readByte();
+        this.actionNumber = packet.getStream().readShort();
+        this.accepted = packet.getStream().readBoolean();
+    }
 
-	public byte getWindowId() {
-		return windowId;
-	}
+    public byte getWindowId() {
+        return windowId;
+    }
 
-	public short getActionNumber() {
-		return actionNumber;
-	}
+    public short getActionNumber() {
+        return actionNumber;
+    }
 
-	public boolean isAccepted() {
-		return accepted;
-	}
+    public boolean isAccepted() {
+        return accepted;
+    }
 
 }

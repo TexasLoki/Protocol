@@ -9,40 +9,40 @@ import java.io.IOException;
 
 public class PacketPlayInUpdateSign extends IncomingPacket {
 
-	private int posX;
-	private int posY;
-	private int posZ;
-	private String[] lines;
+    private int posX;
+    private int posY;
+    private int posZ;
+    private String[] lines;
 
-	public PacketPlayInUpdateSign() {
-		super(ProtocolState.PLAY, 0x12);
-	}
+    public PacketPlayInUpdateSign() {
+        super(ProtocolState.PLAY, 0x12);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.posX = packet.getStream().readInt();
-		this.posY = packet.getStream().readShort();
-		this.posZ = packet.getStream().readInt();
-		this.lines = new String[4];
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.posX = packet.getStream().readInt();
+        this.posY = packet.getStream().readShort();
+        this.posZ = packet.getStream().readInt();
+        this.lines = new String[4];
 
-		for (int i = 0; i < 4; i++) {
-			this.lines[i] = packet.getStream().readString();
-		}
-	}
+        for(int i = 0; i < 4; i++) {
+            this.lines[i] = packet.getStream().readString();
+        }
+    }
 
-	public int getPosX() {
-		return posX;
-	}
+    public int getPosX() {
+        return posX;
+    }
 
-	public int getPosY() {
-		return posY;
-	}
+    public int getPosY() {
+        return posY;
+    }
 
-	public int getPosZ() {
-		return posZ;
-	}
+    public int getPosZ() {
+        return posZ;
+    }
 
-	public String[] getLines() {
-		return lines;
-	}
+    public String[] getLines() {
+        return lines;
+    }
 }

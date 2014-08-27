@@ -10,31 +10,31 @@ import java.io.IOException;
 
 public class PacketPlayInPluginMessage extends IncomingPacket {
 
-	private String channel;
-	private short length;
-	private byte[] data;
+    private String channel;
+    private short length;
+    private byte[] data;
 
-	public PacketPlayInPluginMessage() {
-		super(ProtocolState.PLAY, 0x17);
-	}
+    public PacketPlayInPluginMessage() {
+        super(ProtocolState.PLAY, 0x17);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.channel = packet.getStream().readString();
-		this.length = packet.getStream().readShort();
-		this.data = packet.getStream().readBytes();
-	}
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.channel = packet.getStream().readString();
+        this.length = packet.getStream().readShort();
+        this.data = packet.getStream().readBytes();
+    }
 
-	public String getChannel() {
-		return channel;
-	}
+    public String getChannel() {
+        return channel;
+    }
 
-	public short getLength() {
-		return length;
-	}
+    public short getLength() {
+        return length;
+    }
 
-	public byte[] getData() {
-		return data;
-	}
+    public byte[] getData() {
+        return data;
+    }
 
 }

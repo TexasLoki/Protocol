@@ -9,18 +9,18 @@ import java.io.IOException;
 
 public class PacketPlayInHeldItemChange extends IncomingPacket {
 
-	private short slot;
+    private short slot;
 
-	public PacketPlayInHeldItemChange() {
-		super(ProtocolState.PLAY, 0x09);
-	}
+    public PacketPlayInHeldItemChange() {
+        super(ProtocolState.PLAY, 0x09);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.slot = packet.getStream().readShort();
-	}
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.slot = packet.getStream().readShort();
+    }
 
-	public short getSlot() {
-		return slot;
-	}
+    public short getSlot() {
+        return slot;
+    }
 }

@@ -9,30 +9,30 @@ import java.io.IOException;
 
 public class PacketPlayInPlayerAbilities extends IncomingPacket {
 
-	private byte flags;
-	private float flyingSpeed;
-	private float walkingSpeed;
+    private byte flags;
+    private float flyingSpeed;
+    private float walkingSpeed;
 
-	public PacketPlayInPlayerAbilities() {
-		super(ProtocolState.PLAY, 0x13);
-	}
+    public PacketPlayInPlayerAbilities() {
+        super(ProtocolState.PLAY, 0x13);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.flags = packet.getStream().readByte();
-		this.flyingSpeed = packet.getStream().readFloat();
-		this.walkingSpeed = packet.getStream().readFloat();
-	}
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.flags = packet.getStream().readByte();
+        this.flyingSpeed = packet.getStream().readFloat();
+        this.walkingSpeed = packet.getStream().readFloat();
+    }
 
-	public byte getFlags() {
-		return flags;
-	}
+    public byte getFlags() {
+        return flags;
+    }
 
-	public float getFlyingSpeed() {
-		return flyingSpeed;
-	}
+    public float getFlyingSpeed() {
+        return flyingSpeed;
+    }
 
-	public float getWalkingSpeed() {
-		return walkingSpeed;
-	}
+    public float getWalkingSpeed() {
+        return walkingSpeed;
+    }
 }

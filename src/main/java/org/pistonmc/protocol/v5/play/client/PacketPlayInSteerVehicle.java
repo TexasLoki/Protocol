@@ -9,37 +9,37 @@ import java.io.IOException;
 
 public class PacketPlayInSteerVehicle extends IncomingPacket {
 
-	private float sideways;
-	private float forward;
-	private boolean jump;
-	private boolean unmount;
+    private float sideways;
+    private float forward;
+    private boolean jump;
+    private boolean unmount;
 
-	public PacketPlayInSteerVehicle() {
-		super(ProtocolState.PLAY, 0x0C);
-	}
+    public PacketPlayInSteerVehicle() {
+        super(ProtocolState.PLAY, 0x0C);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.sideways = packet.getStream().readFloat();
-		this.forward = packet.getStream().readFloat();
-		this.jump = packet.getStream().readBoolean();
-		this.unmount = packet.getStream().readBoolean();
-	}
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.sideways = packet.getStream().readFloat();
+        this.forward = packet.getStream().readFloat();
+        this.jump = packet.getStream().readBoolean();
+        this.unmount = packet.getStream().readBoolean();
+    }
 
-	public float getSideways() {
-		return sideways;
-	}
+    public float getSideways() {
+        return sideways;
+    }
 
-	public float getForward() {
-		return forward;
-	}
+    public float getForward() {
+        return forward;
+    }
 
-	public boolean isJump() {
-		return jump;
-	}
+    public boolean isJump() {
+        return jump;
+    }
 
-	public boolean isUnmount() {
-		return unmount;
-	}
+    public boolean isUnmount() {
+        return unmount;
+    }
 
 }

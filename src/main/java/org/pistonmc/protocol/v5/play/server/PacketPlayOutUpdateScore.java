@@ -9,41 +9,41 @@ import java.io.IOException;
 
 public class PacketPlayOutUpdateScore extends OutgoingPacket {
 
-	private String itemName;
-	private byte uor;
-	private String scoreName;
-	private int value;
+    private String itemName;
+    private byte uor;
+    private String scoreName;
+    private int value;
 
-	public PacketPlayOutUpdateScore(String itemName, byte uor, String scoreName, int value) {
-		super(ProtocolState.PLAY, 0x3C);
-		this.itemName = itemName;
-		this.uor = uor;
-		this.scoreName = scoreName;
-		this.value = value;
-	}
+    public PacketPlayOutUpdateScore(String itemName, byte uor, String scoreName, int value) {
+        super(ProtocolState.PLAY, 0x3C);
+        this.itemName = itemName;
+        this.uor = uor;
+        this.scoreName = scoreName;
+        this.value = value;
+    }
 
-	@Override
-	public void write(PacketOutputStream stream) throws PacketException, IOException {
-		stream.writeString(itemName);
-		stream.writeByte(uor);
-		stream.writeString(scoreName);
-		stream.writeInt(value);
-	}
+    @Override
+    public void write(PacketOutputStream stream) throws PacketException, IOException {
+        stream.writeString(itemName);
+        stream.writeByte(uor);
+        stream.writeString(scoreName);
+        stream.writeInt(value);
+    }
 
-	public String getItemName() {
-		return itemName;
-	}
+    public String getItemName() {
+        return itemName;
+    }
 
-	public byte getUpdateOrRemove() {
-		return uor;
-	}
+    public byte getUpdateOrRemove() {
+        return uor;
+    }
 
-	public String getScoreName() {
-		return scoreName;
-	}
+    public String getScoreName() {
+        return scoreName;
+    }
 
-	public int getValue() {
-		return value;
-	}
+    public int getValue() {
+        return value;
+    }
 
 }

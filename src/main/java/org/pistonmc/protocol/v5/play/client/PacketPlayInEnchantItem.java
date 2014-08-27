@@ -7,27 +7,27 @@ import org.pistonmc.protocol.packet.UnreadPacket;
 
 import java.io.IOException;
 
-public class PacketPlayInEnchantItem  extends IncomingPacket {
+public class PacketPlayInEnchantItem extends IncomingPacket {
 
-	private byte windowId;
-	private byte enchantment;
+    private byte windowId;
+    private byte enchantment;
 
-	public PacketPlayInEnchantItem() {
-		super(ProtocolState.PLAY, 0x11);
-	}
+    public PacketPlayInEnchantItem() {
+        super(ProtocolState.PLAY, 0x11);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.windowId = packet.getStream().readByte();
-		this.enchantment = packet.getStream().readByte();
-	}
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.windowId = packet.getStream().readByte();
+        this.enchantment = packet.getStream().readByte();
+    }
 
-	public byte getWindowId() {
-		return windowId;
-	}
+    public byte getWindowId() {
+        return windowId;
+    }
 
-	public byte getEnchantment() {
-		return enchantment;
-	}
+    public byte getEnchantment() {
+        return enchantment;
+    }
 
 }

@@ -9,19 +9,19 @@ import java.io.IOException;
 
 public class PacketPlayInPlayer extends IncomingPacket {
 
-	private boolean onGround;
+    private boolean onGround;
 
-	public PacketPlayInPlayer() {
-		super(ProtocolState.PLAY, 0x03);
-	}
+    public PacketPlayInPlayer() {
+        super(ProtocolState.PLAY, 0x03);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.onGround = packet.getStream().readBoolean();
-	}
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.onGround = packet.getStream().readBoolean();
+    }
 
-	public boolean isOnGround() {
-		return onGround;
-	}
+    public boolean isOnGround() {
+        return onGround;
+    }
 
 }

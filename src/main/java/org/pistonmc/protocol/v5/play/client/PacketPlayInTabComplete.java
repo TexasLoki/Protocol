@@ -9,18 +9,18 @@ import java.io.IOException;
 
 public class PacketPlayInTabComplete extends IncomingPacket {
 
-	private String text;
+    private String text;
 
-	public PacketPlayInTabComplete() {
-		super(ProtocolState.PLAY, 0x14);
-	}
+    public PacketPlayInTabComplete() {
+        super(ProtocolState.PLAY, 0x14);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.text = packet.getStream().readString();
-	}
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.text = packet.getStream().readString();
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 }

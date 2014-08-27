@@ -9,19 +9,19 @@ import java.io.IOException;
 
 public class PacketPlayInChatMessage extends IncomingPacket {
 
-	private String message;
+    private String message;
 
-	public PacketPlayInChatMessage() {
-		super(ProtocolState.PLAY, 0x01);
-	}
+    public PacketPlayInChatMessage() {
+        super(ProtocolState.PLAY, 0x01);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.message = packet.getStream().readString();
-	}
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.message = packet.getStream().readString();
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 
 }

@@ -9,27 +9,27 @@ import java.io.IOException;
 
 public class PacketPlayOutDisplayScoreboard extends OutgoingPacket {
 
-	private byte position;
-	private String boardName;
+    private byte position;
+    private String boardName;
 
-	public PacketPlayOutDisplayScoreboard(byte position, String boardName) {
-		super(ProtocolState.PLAY, 0x3D);
-		this.position = position;
-		this.boardName = boardName;
-	}
+    public PacketPlayOutDisplayScoreboard(byte position, String boardName) {
+        super(ProtocolState.PLAY, 0x3D);
+        this.position = position;
+        this.boardName = boardName;
+    }
 
-	@Override
-	public void write(PacketOutputStream stream) throws PacketException, IOException {
-		stream.writeByte(position);
-		stream.writeString(boardName);
-	}
+    @Override
+    public void write(PacketOutputStream stream) throws PacketException, IOException {
+        stream.writeByte(position);
+        stream.writeString(boardName);
+    }
 
-	public byte getPosition() {
-		return position;
-	}
+    public byte getPosition() {
+        return position;
+    }
 
-	public String getBoardName() {
-		return boardName;
-	}
+    public String getBoardName() {
+        return boardName;
+    }
 
 }

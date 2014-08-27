@@ -9,20 +9,20 @@ import java.io.IOException;
 
 public class PacketPlayInKeepAlive extends IncomingPacket {
 
-	private int aliveId;
+    private int aliveId;
 
-	public PacketPlayInKeepAlive() {
-		super(ProtocolState.PLAY, 0x00);
-	}
+    public PacketPlayInKeepAlive() {
+        super(ProtocolState.PLAY, 0x00);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.aliveId = packet.getStream().readInt();
-	}
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.aliveId = packet.getStream().readInt();
+    }
 
-	public int getAliveId() {
-		return aliveId;
-	}
+    public int getAliveId() {
+        return aliveId;
+    }
 
 }
 

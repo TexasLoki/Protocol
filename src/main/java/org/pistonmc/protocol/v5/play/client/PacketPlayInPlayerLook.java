@@ -9,31 +9,31 @@ import java.io.IOException;
 
 public class PacketPlayInPlayerLook extends IncomingPacket {
 
-	private float yaw;
-	private float pitch;
-	private boolean onGround;
+    private float yaw;
+    private float pitch;
+    private boolean onGround;
 
-	public PacketPlayInPlayerLook() {
-		super(ProtocolState.PLAY, 0x05);
-	}
+    public PacketPlayInPlayerLook() {
+        super(ProtocolState.PLAY, 0x05);
+    }
 
-	@Override
-	public void read(UnreadPacket packet) throws PacketException, IOException {
-		this.yaw = packet.getStream().readFloat();
-		this.pitch = packet.getStream().readFloat();
-		this.onGround = packet.getStream().readBoolean();
-	}
+    @Override
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+        this.yaw = packet.getStream().readFloat();
+        this.pitch = packet.getStream().readFloat();
+        this.onGround = packet.getStream().readBoolean();
+    }
 
-	public float getYaw() {
-		return yaw;
-	}
+    public float getYaw() {
+        return yaw;
+    }
 
-	public float getPitch() {
-		return pitch;
-	}
+    public float getPitch() {
+        return pitch;
+    }
 
-	public boolean isOnGround() {
-		return onGround;
-	}
+    public boolean isOnGround() {
+        return onGround;
+    }
 
 }
