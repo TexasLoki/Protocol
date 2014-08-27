@@ -5,6 +5,7 @@ import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.plugin.protocol.Protocol;
 import org.pistonmc.protocol.PlayerConnection;
 import org.pistonmc.protocol.packet.IncomingPacket;
+import org.pistonmc.protocol.v5.ProtocolV5;
 import org.pistonmc.protocol.v5.login.client.PacketLoginInLoginStart;
 import org.pistonmc.protocol.v5.login.server.PacketLoginOutDisconnect;
 import org.pistonmc.protocol.v5.status.client.PacketStatusInPing;
@@ -16,8 +17,16 @@ import java.io.IOException;
 
 public class ProtocolV4 extends Protocol {
 
+    private ProtocolV5 parent;
+
     public ProtocolV4() {
         super(4);
+    }
+
+    public ProtocolV4(ProtocolV5 parent) {
+        super(parent, null);
+        this.version = 4;
+        this.parent = parent;
     }
 
     public ProtocolV4(ProtocolV4 parent, PlayerConnection connection) {
@@ -25,25 +34,19 @@ public class ProtocolV4 extends Protocol {
     }
 
     @Override
-    public void onLoad() {
-        // Status Packets
-        add(new PacketStatusInRequest());
-        add(new PacketStatusInPing());
-
-        // Login Packets
-        add(new PacketLoginInLoginStart());
-    }
-
-    @Override
     public void handle(IncomingPacket packet) throws PacketException, IOException {
-        if(packet instanceof PacketStatusInRequest) {
-            connection.sendPacket(new PacketStatusOutResponse(new JSONObject()));
-        } else if(packet instanceof PacketStatusInPing) {
-            connection.sendPacket(new PacketStatusOutPing(((PacketStatusInPing) packet).getTime()));
-            connection.close();
-        } else if(packet instanceof PacketLoginInLoginStart) {
-            connection.sendPacket(new PacketLoginOutDisconnect("Outdated Client"));
-            connection.close();
+        if(parent != null) {
+            parent.handle(packet);
+        } else {
+            if(packet instanceof PacketStatusInRequest) {
+                connection.sendPacket(new PacketStatusOutResponse(new JSONObject()));
+            } else if(packet instanceof PacketStatusInPing) {
+                connection.sendPacket(new PacketStatusOutPing(((PacketStatusInPing) packet).getTime()));
+                connection.close();
+            } else if(packet instanceof PacketLoginInLoginStart) {
+                connection.sendPacket(new PacketLoginOutDisconnect("Outdated Client"));
+                connection.close();
+            }
         }
     }
 

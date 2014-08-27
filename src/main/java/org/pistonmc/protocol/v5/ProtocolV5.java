@@ -2,7 +2,12 @@ package org.pistonmc.protocol.v5;
 
 import org.json.JSONObject;
 import org.pistonmc.Piston;
+import org.pistonmc.event.EventHandler;
+import org.pistonmc.event.packet.ReceivedPacketEvent;
+import org.pistonmc.event.packet.SendPacketEvent;
+import org.pistonmc.event.packet.SentPacketEvent;
 import org.pistonmc.exception.protocol.packet.PacketException;
+import org.pistonmc.logging.Logging;
 import org.pistonmc.plugin.protocol.Protocol;
 import org.pistonmc.plugin.protocol.ProtocolManager;
 import org.pistonmc.protocol.PlayerConnection;
@@ -78,6 +83,21 @@ public class ProtocolV5 extends Protocol {
             connection.sendPacket(new PacketLoginOutDisconnect("StickyPiston servers can't be joined yet"));
             connection.close();
         }
+    }
+
+    @EventHandler
+    public void onSend(SendPacketEvent event) {
+        Logging.getLogger().debug("Send: " + event.getPacket());
+    }
+
+    @EventHandler
+    public void onSent(SentPacketEvent event) {
+        Logging.getLogger().debug("Sent: " + event.getPacket());
+    }
+
+    @EventHandler
+    public void onReceived(ReceivedPacketEvent event) {
+        Logging.getLogger().debug("Received: " + event.getPacket());
     }
 
     @Override

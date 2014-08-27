@@ -1,6 +1,5 @@
 package org.pistonmc.protocol.v5.login.server;
 
-import org.json.JSONObject;
 import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.protocol.packet.OutgoingPacket;
 import org.pistonmc.protocol.packet.ProtocolState;
@@ -11,24 +10,24 @@ import java.io.IOException;
 
 public class PacketLoginOutDisconnect extends OutgoingPacket {
 
-    private JSONObject json;
-
-    public PacketLoginOutDisconnect(JSONObject json) {
-        super(ProtocolState.LOGIN, 0x00);
-        this.json = json;
-    }
+    private String message;
 
     public PacketLoginOutDisconnect(String message) {
-        this(ChatFormatter.serialize(message));
+        super(ProtocolState.LOGIN, 0x00);
+        this.message = message;
     }
 
-    public JSONObject getJSON() {
-        return json;
+    public PacketLoginOutDisconnect(String message, boolean serialize) {
+        this(serialize ? ChatFormatter.serialize(message) : message);
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     @Override
     public void write(PacketOutputStream stream) throws PacketException, IOException {
-        stream.writeJSON(json);
+        stream.writeString(message);
     }
 
 }
