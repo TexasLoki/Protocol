@@ -9,25 +9,7 @@ import org.pistonmc.protocol.older.v4.ProtocolV4;
 import org.pistonmc.protocol.packet.IncomingPacket;
 import org.pistonmc.protocol.v5.login.client.PacketLoginInLoginStart;
 import org.pistonmc.protocol.v5.login.server.PacketLoginOutDisconnect;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInAnimation;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInChatMessage;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInClientSettings;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInCloseWindow;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInConfirmTransaction;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInEnchantItem;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInHeldItemChange;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInKeepAlive;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInPlayer;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInPlayerAbilities;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInPlayerDigging;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInPlayerLook;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInPlayerPosition;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInPlayerPositionAndLook;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInPluginMessage;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInSteerVehicle;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInTabComplete;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInUpdateSign;
-import org.pistonmc.protocol.v5.play.client.PacketPlayInUseEntity;
+import org.pistonmc.protocol.v5.play.client.*;
 import org.pistonmc.protocol.v5.status.client.PacketStatusInPing;
 import org.pistonmc.protocol.v5.status.client.PacketStatusInRequest;
 import org.pistonmc.protocol.v5.status.server.PacketStatusOutPing;
@@ -58,7 +40,7 @@ public class ProtocolV5 extends Protocol {
         add(new PacketPlayInPlayerLook());
         add(new PacketPlayInPlayerPositionAndLook());
         add(new PacketPlayInPlayerDigging());
-
+		add(new PacketPlayInPlayerBlockPlacement());
         add(new PacketPlayInHeldItemChange());
         add(new PacketPlayInAnimation());
 
