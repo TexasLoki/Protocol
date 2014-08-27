@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import org.pistonmc.Piston;
 import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.plugin.protocol.Protocol;
+import org.pistonmc.plugin.protocol.ProtocolManager;
 import org.pistonmc.protocol.PlayerConnection;
 import org.pistonmc.protocol.older.v4.ProtocolV4;
 import org.pistonmc.protocol.packet.IncomingPacket;
@@ -29,7 +30,8 @@ public class ProtocolV5 extends Protocol {
 
     @Override
     public void onLoad() {
-        Piston.getProtocolManager().load(new ProtocolV4(), this, "1.7", "4");
+        ProtocolManager manager = Piston.getProtocolManager();
+        manager.load(new ProtocolV4(), this, "1.7-fallback", "4", true);
 
         // Play Packets
         add(new PacketPlayInKeepAlive());
