@@ -40,10 +40,10 @@ public class ProtocolV5 extends Protocol {
         add(new PacketPlayInPlayerLook());
         add(new PacketPlayInPlayerPositionAndLook());
         add(new PacketPlayInPlayerDigging());
-		add(new PacketPlayInPlayerBlockPlacement());
+        add(new PacketPlayInPlayerBlockPlacement());
         add(new PacketPlayInHeldItemChange());
         add(new PacketPlayInAnimation());
-		add(new PacketPlayInEntityAction());
+        add(new PacketPlayInEntityAction());
         add(new PacketPlayInSteerVehicle());
         add(new PacketPlayInCloseWindow());
 
