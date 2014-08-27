@@ -18,7 +18,6 @@
         <url>https://github.com/StickyPiston/Protocol/tree/master/</url>
     </scm>
 
-
     <repositories>
         <repository>
             <id>maven-repo</id>

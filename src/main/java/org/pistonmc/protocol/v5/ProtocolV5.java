@@ -1,9 +1,14 @@
 package org.pistonmc.protocol.v5;
 
+import org.json.JSONObject;
+import org.pistonmc.Piston;
 import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.plugin.protocol.Protocol;
 import org.pistonmc.protocol.PlayerConnection;
-import org.pistonmc.protocol.packet.Packet;
+import org.pistonmc.protocol.older.v4.ProtocolV4;
+import org.pistonmc.protocol.packet.IncomingPacket;
+import org.pistonmc.protocol.v5.login.client.PacketLoginInLoginStart;
+import org.pistonmc.protocol.v5.login.server.PacketLoginOutDisconnect;
 import org.pistonmc.protocol.v5.play.client.PacketPlayInAnimation;
 import org.pistonmc.protocol.v5.play.client.PacketPlayInChatMessage;
 import org.pistonmc.protocol.v5.play.client.PacketPlayInClientSettings;
@@ -23,19 +28,28 @@ import org.pistonmc.protocol.v5.play.client.PacketPlayInSteerVehicle;
 import org.pistonmc.protocol.v5.play.client.PacketPlayInTabComplete;
 import org.pistonmc.protocol.v5.play.client.PacketPlayInUpdateSign;
 import org.pistonmc.protocol.v5.play.client.PacketPlayInUseEntity;
+import org.pistonmc.protocol.v5.status.client.PacketStatusInPing;
+import org.pistonmc.protocol.v5.status.client.PacketStatusInRequest;
+import org.pistonmc.protocol.v5.status.server.PacketStatusOutPing;
+import org.pistonmc.protocol.v5.status.server.PacketStatusOutResponse;
 
-public class StickyProtocol extends Protocol {
+import java.io.IOException;
 
-    public StickyProtocol() {
+public class ProtocolV5 extends Protocol {
+
+    public ProtocolV5() {
         super(5);
     }
 
-    public StickyProtocol(int version, PlayerConnection connection) {
-        super(version, connection);
+    public ProtocolV5(ProtocolV5 parent, PlayerConnection connection) {
+        super(parent, connection);
     }
 
     @Override
     public void onLoad() {
+        Piston.getProtocolManager().load(new ProtocolV4(), this, "1.7", "4");
+
+        // Play Packets
         add(new PacketPlayInKeepAlive());
         add(new PacketPlayInChatMessage());
         add(new PacketPlayInUseEntity());
@@ -60,16 +74,31 @@ public class StickyProtocol extends Protocol {
         add(new PacketPlayInClientSettings());
 
         add(new PacketPlayInPluginMessage());
+
+        // Status Packets
+        add(new PacketStatusInRequest());
+        add(new PacketStatusInPing());
+
+        // Login Packets
+        add(new PacketLoginInLoginStart());
     }
 
     @Override
-    public void handle(Packet packet) throws PacketException {
-
+    public void handle(IncomingPacket packet) throws PacketException, IOException {
+        if(packet instanceof PacketStatusInRequest) {
+            connection.sendPacket(new PacketStatusOutResponse(new JSONObject()));
+        } else if(packet instanceof PacketStatusInPing) {
+            connection.sendPacket(new PacketStatusOutPing(((PacketStatusInPing) packet).getTime()));
+            connection.close();
+        } else if(packet instanceof PacketLoginInLoginStart) {
+            connection.sendPacket(new PacketLoginOutDisconnect("StickyPiston servers can't be joined yet"));
+            connection.close();
+        }
     }
 
     @Override
-    public Protocol create(PlayerConnection connection) {
-        return new StickyProtocol(version, connection);
+    public ProtocolV5 create(PlayerConnection connection) {
+        return new ProtocolV5(this, connection);
     }
 
 }
