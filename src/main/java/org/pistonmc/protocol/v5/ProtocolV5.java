@@ -1,8 +1,10 @@
 package org.pistonmc.protocol.v5;
 
 import org.json.JSONObject;
+import org.pistonmc.ChatColor;
 import org.pistonmc.Piston;
 import org.pistonmc.event.EventHandler;
+import org.pistonmc.event.connection.ServerListPingEvent;
 import org.pistonmc.event.packet.ReceivedPacketEvent;
 import org.pistonmc.event.packet.SendPacketEvent;
 import org.pistonmc.event.packet.SentPacketEvent;
@@ -29,14 +31,14 @@ public class ProtocolV5 extends Protocol {
         super(5);
     }
 
-    public ProtocolV5(ProtocolV5 parent, PlayerConnection connection) {
-        super(parent, connection);
+    public ProtocolV5(ProtocolV5 parent, PlayerConnection connection, ProtocolManager manager) {
+        super(parent, connection, manager);
     }
 
     @Override
     public void onLoad() {
         ProtocolManager manager = Piston.getProtocolManager();
-        manager.load(new ProtocolV4(), this, "1.7-fallback", "4", true);
+        manager.load(new ProtocolV4(), this, "StickyPiston 1.7-fallback", "4", getDescription().getAuthors(), true);
 
         // Play Packets
         add(new PacketPlayInKeepAlive());
@@ -75,34 +77,47 @@ public class ProtocolV5 extends Protocol {
     @Override
     public void handle(IncomingPacket packet) throws PacketException, IOException {
         if(packet instanceof PacketStatusInRequest) {
-            connection.sendPacket(new PacketStatusOutResponse(new JSONObject()));
+            ServerListPingEvent event = response();
+            Piston.getEventManager().call(event);
+            if(event.isCancelled()) {
+                return;
+            }
+
+            connection.sendPacket(new PacketStatusOutResponse(event));
         } else if(packet instanceof PacketStatusInPing) {
             connection.sendPacket(new PacketStatusOutPing(((PacketStatusInPing) packet).getTime()));
             connection.close();
         } else if(packet instanceof PacketLoginInLoginStart) {
-            connection.sendPacket(new PacketLoginOutDisconnect("StickyPiston servers can't be joined yet"));
+            connection.sendPacket(new PacketLoginOutDisconnect(ChatColor.RED + "-> StickyPiston <-\n\n" + ChatColor.GOLD + "This server can't be joined yet.", true));
             connection.close();
         }
     }
 
     @EventHandler
     public void onSend(SendPacketEvent event) {
-        Logging.getLogger().debug("Send: " + event.getPacket());
+        getLogger().debug("Send: " + event.getPacket());
     }
 
     @EventHandler
     public void onSent(SentPacketEvent event) {
-        Logging.getLogger().debug("Sent: " + event.getPacket());
+        getLogger().debug("Sent: " + event.getPacket());
     }
 
     @EventHandler
     public void onReceived(ReceivedPacketEvent event) {
-        Logging.getLogger().debug("Received: " + event.getPacket());
+        getLogger().debug("Received: " + event.getPacket());
+    }
+
+    @EventHandler
+    public void onPing(ServerListPingEvent event) {
+        event.setAccessible(false);
+        event.setProtocolName("Down for maintenance");
+        event.setMotd(ChatColor.RED + "-> " + ChatColor.DARK_RED + "" + ChatColor.BOLD + "MAINTENANCE MODE" + ChatColor.RED + " <-");
     }
 
     @Override
-    public ProtocolV5 create(PlayerConnection connection) {
-        return new ProtocolV5(this, connection);
+    public ProtocolV5 create(PlayerConnection connection, ProtocolManager manager) {
+        return new ProtocolV5(this, connection, manager);
     }
 
 }

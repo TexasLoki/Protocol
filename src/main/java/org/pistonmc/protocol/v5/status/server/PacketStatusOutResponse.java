@@ -1,6 +1,7 @@
 package org.pistonmc.protocol.v5.status.server;
 
 import org.json.JSONObject;
+import org.pistonmc.event.connection.ServerListPingEvent;
 import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.protocol.packet.OutgoingPacket;
 import org.pistonmc.protocol.packet.ProtocolState;
@@ -15,6 +16,10 @@ public class PacketStatusOutResponse extends OutgoingPacket {
     public PacketStatusOutResponse(JSONObject json) {
         super(ProtocolState.STATUS, 0x00);
         this.json = json;
+    }
+
+    public PacketStatusOutResponse(ServerListPingEvent event) {
+        this(event.serialize());
     }
 
     public JSONObject getJSON() {

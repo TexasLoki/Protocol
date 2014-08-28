@@ -13,12 +13,12 @@ public class PacketLoginOutDisconnect extends OutgoingPacket {
     private String message;
 
     public PacketLoginOutDisconnect(String message) {
-        super(ProtocolState.LOGIN, 0x00);
-        this.message = message;
+        this(message, false);
     }
 
     public PacketLoginOutDisconnect(String message, boolean serialize) {
-        this(serialize ? ChatFormatter.serialize(message) : message);
+        super(ProtocolState.LOGIN, 0x00);
+        this.message = serialize ? ChatFormatter.serialize(message).toString() : message;
     }
 
     public String getMessage() {

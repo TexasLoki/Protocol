@@ -1,8 +1,12 @@
 package org.pistonmc.protocol.older.v4;
 
 import org.json.JSONObject;
+import org.pistonmc.ChatColor;
+import org.pistonmc.Piston;
+import org.pistonmc.event.connection.ServerListPingEvent;
 import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.plugin.protocol.Protocol;
+import org.pistonmc.plugin.protocol.ProtocolManager;
 import org.pistonmc.protocol.PlayerConnection;
 import org.pistonmc.protocol.packet.IncomingPacket;
 import org.pistonmc.protocol.v5.ProtocolV5;
@@ -23,24 +27,33 @@ public class ProtocolV4 extends Protocol {
         super(4);
     }
 
-    public ProtocolV4(ProtocolV5 parent) {
-        super(parent, null);
+    public ProtocolV4(ProtocolV5 parent, ProtocolManager manager) {
+        super(parent, manager);
         this.version = 4;
         this.parent = parent;
     }
 
-    public ProtocolV4(ProtocolV4 parent, PlayerConnection connection) {
-        super(parent, connection);
+    public ProtocolV4(ProtocolV4 parent, PlayerConnection connection, ProtocolManager manager) {
+        super(parent, connection, manager);
     }
 
     @Override
     public void handle(IncomingPacket packet) throws PacketException, IOException {
+        if(packet instanceof PacketStatusInRequest) {
+            ServerListPingEvent event = response();
+            Piston.getEventManager().call(event);
+            if(event.isCancelled()) {
+                return;
+            }
+
+            connection.sendPacket(new PacketStatusOutResponse(event));
+            return;
+        }
+
         if(parent != null) {
             parent.handle(packet);
         } else {
-            if(packet instanceof PacketStatusInRequest) {
-                connection.sendPacket(new PacketStatusOutResponse(new JSONObject()));
-            } else if(packet instanceof PacketStatusInPing) {
+            if(packet instanceof PacketStatusInPing) {
                 connection.sendPacket(new PacketStatusOutPing(((PacketStatusInPing) packet).getTime()));
                 connection.close();
             } else if(packet instanceof PacketLoginInLoginStart) {
@@ -51,8 +64,13 @@ public class ProtocolV4 extends Protocol {
     }
 
     @Override
-    public Protocol create(PlayerConnection connection) {
-        return new ProtocolV4(this, connection);
+    public Protocol create(PlayerConnection connection, ProtocolManager manager) {
+        return new ProtocolV4(this, connection, manager);
+    }
+
+    @Override
+    public ServerListPingEvent response() {
+        return new ServerListPingEvent(getDescription().getName(), version, 0, 20, ChatColor.AQUA + "A Minecraft Server");
     }
 
 }
