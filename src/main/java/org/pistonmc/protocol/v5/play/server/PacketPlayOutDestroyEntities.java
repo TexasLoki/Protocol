@@ -23,7 +23,7 @@ public class PacketPlayOutDestroyEntities extends OutgoingPacket {
     @Override
     public void write(PacketOutputStream stream) throws PacketException, IOException {
         stream.writeByte(ids.length);
-        for(int i : ids) {
+        for (int i : ids) {
             stream.writeInt(i);
         }
     }

@@ -25,7 +25,7 @@ public class PacketPlayInUpdateSign extends IncomingPacket {
         this.posZ = packet.getStream().readInt();
         this.lines = new String[4];
 
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             this.lines[i] = packet.getStream().readString();
         }
     }

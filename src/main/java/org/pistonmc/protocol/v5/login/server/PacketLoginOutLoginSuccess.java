@@ -4,7 +4,6 @@ import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.protocol.packet.OutgoingPacket;
 import org.pistonmc.protocol.packet.ProtocolState;
 import org.pistonmc.protocol.stream.PacketOutputStream;
-import org.pistonmc.util.ChatFormatter;
 
 import java.io.IOException;
 import java.util.UUID;

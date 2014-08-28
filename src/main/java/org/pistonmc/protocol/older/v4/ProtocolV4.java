@@ -1,6 +1,5 @@
 package org.pistonmc.protocol.older.v4;
 
-import org.json.JSONObject;
 import org.pistonmc.ChatColor;
 import org.pistonmc.Piston;
 import org.pistonmc.event.connection.ServerListPingEvent;
@@ -39,10 +38,10 @@ public class ProtocolV4 extends Protocol {
 
     @Override
     public void handle(IncomingPacket packet) throws PacketException, IOException {
-        if(packet instanceof PacketStatusInRequest) {
+        if (packet instanceof PacketStatusInRequest) {
             ServerListPingEvent event = response();
             Piston.getEventManager().call(event);
-            if(event.isCancelled()) {
+            if (event.isCancelled()) {
                 return;
             }
 
@@ -50,13 +49,13 @@ public class ProtocolV4 extends Protocol {
             return;
         }
 
-        if(parent != null) {
+        if (parent != null) {
             parent.handle(packet);
         } else {
-            if(packet instanceof PacketStatusInPing) {
+            if (packet instanceof PacketStatusInPing) {
                 connection.sendPacket(new PacketStatusOutPing(((PacketStatusInPing) packet).getTime()));
                 connection.close();
-            } else if(packet instanceof PacketLoginInLoginStart) {
+            } else if (packet instanceof PacketLoginInLoginStart) {
                 connection.sendPacket(new PacketLoginOutDisconnect("Outdated Client"));
                 connection.close();
             }

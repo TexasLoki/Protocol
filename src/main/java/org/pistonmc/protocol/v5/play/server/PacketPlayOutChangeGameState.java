@@ -1,9 +1,9 @@
 package org.pistonmc.protocol.v5.play.server;
 
 import org.pistonmc.exception.protocol.packet.PacketException;
+import org.pistonmc.protocol.packet.OutgoingPacket;
 import org.pistonmc.protocol.packet.ProtocolState;
 import org.pistonmc.protocol.stream.PacketOutputStream;
-import org.pistonmc.protocol.packet.OutgoingPacket;
 
 import java.io.IOException;
 

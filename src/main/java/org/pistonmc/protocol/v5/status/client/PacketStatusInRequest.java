@@ -14,6 +14,7 @@ public class PacketStatusInRequest extends IncomingPacket {
     }
 
     @Override
-    public void read(UnreadPacket packet) throws PacketException, IOException {}
+    public void read(UnreadPacket packet) throws PacketException, IOException {
+    }
 
 }

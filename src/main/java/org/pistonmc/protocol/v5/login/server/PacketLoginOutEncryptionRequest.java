@@ -6,7 +6,6 @@ import org.pistonmc.protocol.packet.ProtocolState;
 import org.pistonmc.protocol.stream.PacketOutputStream;
 
 import java.io.IOException;
-import java.util.UUID;
 
 public class PacketLoginOutEncryptionRequest extends OutgoingPacket {
 

@@ -74,18 +74,18 @@ public class ProtocolV5 extends Protocol {
 
     @Override
     public void handle(IncomingPacket packet) throws PacketException, IOException {
-        if(packet instanceof PacketStatusInRequest) {
+        if (packet instanceof PacketStatusInRequest) {
             ServerListPingEvent event = response();
             Piston.getEventManager().call(event);
-            if(event.isCancelled()) {
+            if (event.isCancelled()) {
                 return;
             }
 
             connection.sendPacket(new PacketStatusOutResponse(event));
-        } else if(packet instanceof PacketStatusInPing) {
+        } else if (packet instanceof PacketStatusInPing) {
             connection.sendPacket(new PacketStatusOutPing(((PacketStatusInPing) packet).getTime()));
             connection.close();
-        } else if(packet instanceof PacketLoginInLoginStart) {
+        } else if (packet instanceof PacketLoginInLoginStart) {
             connection.sendPacket(new PacketLoginOutDisconnect(ChatColor.RED + "-> StickyPiston <-\n\n" + ChatColor.GOLD + "This server can't be joined yet.", true));
             connection.close();
         }
