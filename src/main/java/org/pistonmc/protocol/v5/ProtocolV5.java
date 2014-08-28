@@ -1,6 +1,5 @@
 package org.pistonmc.protocol.v5;
 
-import org.json.JSONObject;
 import org.pistonmc.ChatColor;
 import org.pistonmc.Piston;
 import org.pistonmc.event.EventHandler;
@@ -9,7 +8,6 @@ import org.pistonmc.event.packet.ReceivedPacketEvent;
 import org.pistonmc.event.packet.SendPacketEvent;
 import org.pistonmc.event.packet.SentPacketEvent;
 import org.pistonmc.exception.protocol.packet.PacketException;
-import org.pistonmc.logging.Logging;
 import org.pistonmc.plugin.protocol.Protocol;
 import org.pistonmc.plugin.protocol.ProtocolManager;
 import org.pistonmc.protocol.PlayerConnection;
@@ -106,13 +104,6 @@ public class ProtocolV5 extends Protocol {
     @EventHandler
     public void onReceived(ReceivedPacketEvent event) {
         getLogger().debug("Received: " + event.getPacket());
-    }
-
-    @EventHandler
-    public void onPing(ServerListPingEvent event) {
-        event.setAccessible(false);
-        event.setProtocolName("Down for maintenance");
-        event.setMotd(ChatColor.RED + "-> " + ChatColor.DARK_RED + "" + ChatColor.BOLD + "MAINTENANCE MODE" + ChatColor.RED + " <-");
     }
 
     @Override
