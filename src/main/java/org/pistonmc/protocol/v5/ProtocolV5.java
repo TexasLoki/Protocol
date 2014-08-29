@@ -159,9 +159,7 @@ public class ProtocolV5 extends Protocol {
                 return;
             }
 
-            getLogger().debug(new SimpleObject(ctx.pipeline()).field("name2ctx").value(Map.class));
-            ctx.pipeline().addFirst("decoder", new StickyDecoder(sharedSecret, 32));
-            ctx.pipeline().addFirst("encoder", new StickyEncoder(sharedSecret, 32));
+            connection.secure(sharedSecret);
 
             String hash;
             try {
