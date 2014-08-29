@@ -1,6 +1,5 @@
 package org.pistonmc.protocol.v5;
 
-import org.pistonmc.ChatColor;
 import org.pistonmc.Piston;
 import org.pistonmc.event.EventHandler;
 import org.pistonmc.event.connection.ServerListPingEvent;
@@ -14,16 +13,22 @@ import org.pistonmc.protocol.PlayerConnection;
 import org.pistonmc.protocol.older.v4.ProtocolV4;
 import org.pistonmc.protocol.packet.IncomingPacket;
 import org.pistonmc.protocol.v5.login.client.PacketLoginInLoginStart;
-import org.pistonmc.protocol.v5.login.server.PacketLoginOutDisconnect;
+import org.pistonmc.protocol.v5.login.client.PacketPlayInLoginEncryptionResponse;
+import org.pistonmc.protocol.v5.login.server.PacketLoginOutEncryptionRequest;
 import org.pistonmc.protocol.v5.play.client.*;
 import org.pistonmc.protocol.v5.status.client.PacketStatusInPing;
 import org.pistonmc.protocol.v5.status.client.PacketStatusInRequest;
 import org.pistonmc.protocol.v5.status.server.PacketStatusOutPing;
 import org.pistonmc.protocol.v5.status.server.PacketStatusOutResponse;
+import org.pistonmc.stickypiston.network.player.PlayerConnectionHandler;
+import org.pistonmc.util.EncryptionUtils;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class ProtocolV5 extends Protocol {
+
+    private static final Random RANDOM = new Random();
 
     public ProtocolV5() {
         super(5);
@@ -70,7 +75,10 @@ public class ProtocolV5 extends Protocol {
 
         // Login Packets
         add(new PacketLoginInLoginStart());
+        add(new PacketPlayInLoginEncryptionResponse());
     }
+
+    private PacketLoginOutEncryptionRequest encryptionRequest;
 
     @Override
     public void handle(IncomingPacket packet) throws PacketException, IOException {
@@ -86,8 +94,18 @@ public class ProtocolV5 extends Protocol {
             connection.sendPacket(new PacketStatusOutPing(((PacketStatusInPing) packet).getTime()));
             connection.close();
         } else if (packet instanceof PacketLoginInLoginStart) {
-            connection.sendPacket(new PacketLoginOutDisconnect(ChatColor.RED + "-> StickyPiston <-\n\n" + ChatColor.GOLD + "This server can't be joined yet.", true));
-            connection.close();
+            PlayerConnectionHandler handler = (PlayerConnectionHandler) connection;
+            if (!Piston.getConfig().getBoolean("offline")) {
+                Piston.getLogger().info("Starting login for " + ((PacketLoginInLoginStart) packet).getName() + "...");
+                String hash = Long.toString(RANDOM.nextLong(), 16);
+                byte[] pubKey = EncryptionUtils.getKeys().getPublic().getEncoded();
+                byte[] verify = new byte[4];
+                RANDOM.nextBytes(verify);
+                encryptionRequest = new PacketLoginOutEncryptionRequest(hash, pubKey, verify);
+                connection.sendPacket(encryptionRequest);
+            } else {
+                // Send login success
+            }
         }
     }
 

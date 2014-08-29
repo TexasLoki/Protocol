@@ -9,19 +9,19 @@ import java.io.IOException;
 
 public class PacketLoginOutEncryptionRequest extends OutgoingPacket {
 
-    private String sessionId;
+    private String serverId;
     private byte[] publicKey;
     private byte[] verifyToken;
 
-    public PacketLoginOutEncryptionRequest(String sessionId, byte[] publicKey, byte[] verifyToken) {
+    public PacketLoginOutEncryptionRequest(String serverId, byte[] publicKey, byte[] verifyToken) {
         super(ProtocolState.LOGIN, 0x01);
-        this.sessionId = sessionId;
+        this.serverId = serverId;
         this.publicKey = publicKey;
         this.verifyToken = verifyToken;
     }
 
     public String getSessionId() {
-        return sessionId;
+        return serverId;
     }
 
     public byte[] getPublicKey() {
@@ -34,7 +34,7 @@ public class PacketLoginOutEncryptionRequest extends OutgoingPacket {
 
     @Override
     public void write(PacketOutputStream stream) throws PacketException, IOException {
-        stream.writeString(sessionId);
+        stream.writeString(serverId);
         stream.writeByteArray(publicKey);
         stream.writeByteArray(verifyToken);
     }
