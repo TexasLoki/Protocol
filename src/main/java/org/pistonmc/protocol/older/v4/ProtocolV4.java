@@ -33,7 +33,7 @@ public class ProtocolV4 extends Protocol {
         this.parent = parent;
     }
 
-    public ProtocolV4(ProtocolV4 parent, PlayerConnection connection, ProtocolManager manager) {
+    public ProtocolV4(Protocol parent, PlayerConnection connection, ProtocolManager manager) {
         super(parent, connection, manager);
     }
 
@@ -65,7 +65,7 @@ public class ProtocolV4 extends Protocol {
 
     @Override
     public Protocol create(PlayerConnection connection, ProtocolManager manager) {
-        return new ProtocolV4(this, connection, manager);
+        return new ProtocolV4(parent != null ? parent : this, connection, manager);
     }
 
     @Override

@@ -59,7 +59,7 @@ public class ProtocolV5 extends Protocol {
     @Override
     public void onLoad() {
         ProtocolManager manager = Piston.getProtocolManager();
-        manager.load(new ProtocolV4(), this, "StickyPiston 1.7-fallback", "4", getDescription().getAuthors(), true);
+        manager.load(new ProtocolV4(this, manager), this, "StickyPiston 1.7-fallback", "4", getDescription().getAuthors(), true);
 
         // Play Packets
         add(new PacketPlayInKeepAlive());
@@ -113,18 +113,17 @@ public class ProtocolV5 extends Protocol {
             connection.close();
         } else if (packet instanceof PacketLoginInLoginStart) {
             PlayerConnectionHandler handler = (PlayerConnectionHandler) connection;
-            //if (!Piston.getConfig().getBoolean("offline")) {
+            if (!Piston.getConfig().getBoolean("settings.offline")) {
                 Piston.getLogger().info("Starting login for " + ((PacketLoginInLoginStart) packet).getName() + "...");
                 String hash = Long.toString(RANDOM.nextLong(), 16);
-                byte[] pubKey = EncryptionUtils.getKeys().getPublic().getEncoded();
-                byte[] verify = new byte[4];
-                RANDOM.nextBytes(verify);
+                byte[] pubKey = EncryptionUtils.generateX509Key(EncryptionUtils.getKeys().getPublic()).getEncoded();
+                byte[] verify = EncryptionUtils.generateVerifyToken();
                 encryptionRequest = new PacketLoginOutEncryptionRequest(hash, pubKey, verify);
                 username = ((PacketLoginInLoginStart) packet).getName();
                 connection.sendPacket(encryptionRequest);
-            /*} else {
+            } else {
                 // Send login success
-            }*/
+            }
         } else if (packet instanceof PacketLoginInEncryptionResponse) {
             PacketLoginInEncryptionResponse p = (PacketLoginInEncryptionResponse) packet;
             final PrivateKey privateKey = EncryptionUtils.getKeys().getPrivate();
