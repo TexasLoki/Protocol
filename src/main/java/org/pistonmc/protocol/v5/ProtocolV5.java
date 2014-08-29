@@ -1,5 +1,6 @@
 package org.pistonmc.protocol.v5;
 
+import io.netty.channel.ChannelHandlerContext;
 import org.pistonmc.Piston;
 import org.pistonmc.event.EventHandler;
 import org.pistonmc.event.connection.ServerListPingEvent;
@@ -21,6 +22,8 @@ import org.pistonmc.protocol.v5.status.client.PacketStatusInPing;
 import org.pistonmc.protocol.v5.status.client.PacketStatusInRequest;
 import org.pistonmc.protocol.v5.status.server.PacketStatusOutPing;
 import org.pistonmc.protocol.v5.status.server.PacketStatusOutResponse;
+import org.pistonmc.stickypiston.network.encryption.StickyDecoder;
+import org.pistonmc.stickypiston.network.encryption.StickyEncoder;
 import org.pistonmc.stickypiston.network.player.PlayerConnectionHandler;
 import org.pistonmc.util.EncryptionUtils;
 
@@ -91,7 +94,7 @@ public class ProtocolV5 extends Protocol {
     private PacketLoginOutEncryptionRequest encryptionRequest;
 
     @Override
-    public void handle(IncomingPacket packet) throws PacketException, IOException {
+    public void handle(IncomingPacket packet, ChannelHandlerContext ctx) throws PacketException, IOException {
         if (packet instanceof PacketStatusInRequest) {
             ServerListPingEvent event = response();
             Piston.getEventManager().call(event);
@@ -148,6 +151,10 @@ public class ProtocolV5 extends Protocol {
                 disconnect("There was an error whilst logging you in.");
                 return;
             }
+
+            ctx.pipeline().addBefore("frame-decoder", "decrypt", new StickyDecoder(sharedSecret, 32));
+            ctx.pipeline().addBefore("frame-prepender", "encrypt", new StickyEncoder(sharedSecret, 32));
+
             String hash;
             try {
                 final MessageDigest digest = MessageDigest.getInstance("SHA-1");
