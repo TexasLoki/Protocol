@@ -14,6 +14,7 @@ import org.pistonmc.protocol.older.v4.ProtocolV4;
 import org.pistonmc.protocol.packet.IncomingPacket;
 import org.pistonmc.protocol.v5.login.client.PacketLoginInEncryptionResponse;
 import org.pistonmc.protocol.v5.login.client.PacketLoginInLoginStart;
+import org.pistonmc.protocol.v5.login.server.PacketLoginOutDisconnect;
 import org.pistonmc.protocol.v5.login.server.PacketLoginOutEncryptionRequest;
 import org.pistonmc.protocol.v5.play.client.*;
 import org.pistonmc.protocol.v5.status.client.PacketStatusInPing;
@@ -23,7 +24,16 @@ import org.pistonmc.protocol.v5.status.server.PacketStatusOutResponse;
 import org.pistonmc.stickypiston.network.player.PlayerConnectionHandler;
 import org.pistonmc.util.EncryptionUtils;
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.util.Arrays;
 import java.util.Random;
 
 public class ProtocolV5 extends Protocol {
@@ -88,7 +98,6 @@ public class ProtocolV5 extends Protocol {
             if (event.isCancelled()) {
                 return;
             }
-
             connection.sendPacket(new PacketStatusOutResponse(event));
         } else if (packet instanceof PacketStatusInPing) {
             connection.sendPacket(new PacketStatusOutPing(((PacketStatusInPing) packet).getTime()));
@@ -107,8 +116,56 @@ public class ProtocolV5 extends Protocol {
                 // Send login success
             }
         } else if (packet instanceof PacketLoginInEncryptionResponse) {
-
+            PacketLoginInEncryptionResponse p = (PacketLoginInEncryptionResponse) packet;
+            final PrivateKey privateKey = EncryptionUtils.getKeys().getPrivate();
+            Cipher rsaCipher;
+            try {
+                rsaCipher = Cipher.getInstance("RSA");
+            } catch (GeneralSecurityException ex) {
+                Piston.getLogger().severe(ex);
+                disconnect("There was an error whilst logging you in.");
+                return;
+            }
+            SecretKey sharedSecret;
+            try {
+                rsaCipher.init(Cipher.DECRYPT_MODE, privateKey);
+                sharedSecret = new SecretKeySpec(rsaCipher.doFinal(p.getSharedSecret()), "AES");
+            } catch (Exception ex) {
+                Piston.getLogger().severe(ex);
+                disconnect("There was an error whilst logging you in.");
+                return;
+            }
+            byte[] verifyToken;
+            try {
+                rsaCipher.init(Cipher.DECRYPT_MODE, privateKey);
+                verifyToken = rsaCipher.doFinal(p.getVerifyToken());
+            } catch (Exception ex) {
+                Piston.getLogger().severe(ex);
+                disconnect("There was an error whilst logging you in.");
+                return;
+            }
+            if (!Arrays.equals(verifyToken, encryptionRequest.getVerifyToken())) {
+                disconnect("There was an error whilst logging you in.");
+                return;
+            }
+            String hash;
+            try {
+                final MessageDigest digest = MessageDigest.getInstance("SHA-1");
+                digest.update(encryptionRequest.getSessionId().getBytes());
+                digest.update(sharedSecret.getEncoded());
+                digest.update(EncryptionUtils.getKeys().getPublic().getEncoded());
+                hash = new BigInteger(digest.digest()).toString(16);
+            } catch (NoSuchAlgorithmException ex) {
+                Piston.getLogger().severe(ex);
+                disconnect("There was an error whilst logging you in.");
+                return;
+            }
         }
+    }
+
+    public void disconnect(String reason) throws IOException, PacketException {
+        connection.sendPacket(new PacketLoginOutDisconnect(reason, true));
+        connection.close();
     }
 
     @EventHandler
