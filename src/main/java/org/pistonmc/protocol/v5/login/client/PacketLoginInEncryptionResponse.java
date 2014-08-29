@@ -7,7 +7,7 @@ import org.pistonmc.protocol.packet.IncomingPacket;
 
 import java.io.IOException;
 
-public class PacketPlayInLoginEncryptionResponse extends IncomingPacket {
+public class PacketLoginInEncryptionResponse extends IncomingPacket {
 
     private short sharedSecretLength;
     private byte[] sharedSecret;
@@ -16,7 +16,7 @@ public class PacketPlayInLoginEncryptionResponse extends IncomingPacket {
     private byte[] verifyToken;
 
 
-    public PacketPlayInLoginEncryptionResponse() {
+    public PacketLoginInEncryptionResponse() {
         super(ProtocolState.LOGIN, 0x01);
     }
 

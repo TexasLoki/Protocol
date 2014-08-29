@@ -12,8 +12,8 @@ import org.pistonmc.plugin.protocol.ProtocolManager;
 import org.pistonmc.protocol.PlayerConnection;
 import org.pistonmc.protocol.older.v4.ProtocolV4;
 import org.pistonmc.protocol.packet.IncomingPacket;
+import org.pistonmc.protocol.v5.login.client.PacketLoginInEncryptionResponse;
 import org.pistonmc.protocol.v5.login.client.PacketLoginInLoginStart;
-import org.pistonmc.protocol.v5.login.client.PacketPlayInLoginEncryptionResponse;
 import org.pistonmc.protocol.v5.login.server.PacketLoginOutEncryptionRequest;
 import org.pistonmc.protocol.v5.play.client.*;
 import org.pistonmc.protocol.v5.status.client.PacketStatusInPing;
@@ -75,7 +75,7 @@ public class ProtocolV5 extends Protocol {
 
         // Login Packets
         add(new PacketLoginInLoginStart());
-        add(new PacketPlayInLoginEncryptionResponse());
+        add(new PacketLoginInEncryptionResponse());
     }
 
     private PacketLoginOutEncryptionRequest encryptionRequest;
@@ -106,6 +106,8 @@ public class ProtocolV5 extends Protocol {
             } else {
                 // Send login success
             }
+        } else if (packet instanceof PacketLoginInEncryptionResponse) {
+
         }
     }
 
