@@ -29,6 +29,7 @@ import org.pistonmc.stickypiston.network.encryption.StickyDecoder;
 import org.pistonmc.stickypiston.network.encryption.StickyEncoder;
 import org.pistonmc.stickypiston.network.player.PlayerConnectionHandler;
 import org.pistonmc.util.EncryptionUtils;
+import org.pistonmc.util.reflection.SimpleObject;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -40,6 +41,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Random;
 
 public class ProtocolV5 extends Protocol {
@@ -157,8 +159,9 @@ public class ProtocolV5 extends Protocol {
                 return;
             }
 
-            ctx.pipeline().addBefore("frame-decoder", "decrypt", new StickyDecoder(sharedSecret, 32));
-            ctx.pipeline().addBefore("frame-prepender", "encrypt", new StickyEncoder(sharedSecret, 32));
+            getLogger().debug(new SimpleObject(ctx.pipeline()).field("name2ctx").value(Map.class));
+            ctx.pipeline().addFirst("decoder", new StickyDecoder(sharedSecret, 32));
+            ctx.pipeline().addFirst("encoder", new StickyEncoder(sharedSecret, 32));
 
             String hash;
             try {

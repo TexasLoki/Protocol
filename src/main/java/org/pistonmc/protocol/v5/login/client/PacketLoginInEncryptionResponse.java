@@ -9,10 +9,7 @@ import java.io.IOException;
 
 public class PacketLoginInEncryptionResponse extends IncomingPacket {
 
-    private short sharedSecretLength;
     private byte[] sharedSecret;
-
-    private short verifyTokenLength;
     private byte[] verifyToken;
 
 
@@ -22,23 +19,12 @@ public class PacketLoginInEncryptionResponse extends IncomingPacket {
 
     @Override
     public void read(UnreadPacket packet) throws PacketException, IOException {
-        sharedSecretLength = packet.getStream().readShort();
-        sharedSecret = packet.getStream().readBytes();
-
-        verifyTokenLength = packet.getStream().readShort();
-        verifyToken = packet.getStream().readBytes();
-    }
-
-    public short getSharedSecretLength() {
-        return sharedSecretLength;
+        this.sharedSecret = packet.getStream().readBytes();
+        this.verifyToken = packet.getStream().readBytes();
     }
 
     public byte[] getSharedSecret() {
         return sharedSecret;
-    }
-
-    public short getVerifyTokenLength() {
-        return verifyTokenLength;
     }
 
     public byte[] getVerifyToken() {
