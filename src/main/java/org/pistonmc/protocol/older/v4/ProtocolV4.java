@@ -1,5 +1,6 @@
 package org.pistonmc.protocol.older.v4;
 
+import io.netty.channel.ChannelHandlerContext;
 import org.pistonmc.ChatColor;
 import org.pistonmc.Piston;
 import org.pistonmc.event.connection.ServerListPingEvent;
@@ -37,7 +38,7 @@ public class ProtocolV4 extends Protocol {
     }
 
     @Override
-    public void handle(IncomingPacket packet) throws PacketException, IOException {
+    public void handle(IncomingPacket packet, ChannelHandlerContext ctx) throws PacketException, IOException {
         if (packet instanceof PacketStatusInRequest) {
             ServerListPingEvent event = response();
             Piston.getEventManager().call(event);
@@ -50,7 +51,7 @@ public class ProtocolV4 extends Protocol {
         }
 
         if (parent != null) {
-            parent.handle(packet);
+            parent.handle(packet, ctx);
         } else {
             if (packet instanceof PacketStatusInPing) {
                 connection.sendPacket(new PacketStatusOutPing(((PacketStatusInPing) packet).getTime()));

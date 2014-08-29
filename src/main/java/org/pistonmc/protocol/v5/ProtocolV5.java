@@ -1,6 +1,7 @@
 package org.pistonmc.protocol.v5;
 
 import io.netty.channel.ChannelHandlerContext;
+import org.pistonmc.ChatColor;
 import org.pistonmc.Piston;
 import org.pistonmc.event.EventHandler;
 import org.pistonmc.event.connection.ServerListPingEvent;
@@ -22,6 +23,8 @@ import org.pistonmc.protocol.v5.status.client.PacketStatusInPing;
 import org.pistonmc.protocol.v5.status.client.PacketStatusInRequest;
 import org.pistonmc.protocol.v5.status.server.PacketStatusOutPing;
 import org.pistonmc.protocol.v5.status.server.PacketStatusOutResponse;
+import org.pistonmc.stickypiston.auth.AuthenticationHandler;
+import org.pistonmc.stickypiston.auth.YggdrasilAuthenticationHandler;
 import org.pistonmc.stickypiston.network.encryption.StickyDecoder;
 import org.pistonmc.stickypiston.network.encryption.StickyEncoder;
 import org.pistonmc.stickypiston.network.player.PlayerConnectionHandler;
@@ -92,6 +95,7 @@ public class ProtocolV5 extends Protocol {
     }
 
     private PacketLoginOutEncryptionRequest encryptionRequest;
+    private String username;
 
     @Override
     public void handle(IncomingPacket packet, ChannelHandlerContext ctx) throws PacketException, IOException {
@@ -107,17 +111,18 @@ public class ProtocolV5 extends Protocol {
             connection.close();
         } else if (packet instanceof PacketLoginInLoginStart) {
             PlayerConnectionHandler handler = (PlayerConnectionHandler) connection;
-            if (!Piston.getConfig().getBoolean("offline")) {
+            //if (!Piston.getConfig().getBoolean("offline")) {
                 Piston.getLogger().info("Starting login for " + ((PacketLoginInLoginStart) packet).getName() + "...");
                 String hash = Long.toString(RANDOM.nextLong(), 16);
                 byte[] pubKey = EncryptionUtils.getKeys().getPublic().getEncoded();
                 byte[] verify = new byte[4];
                 RANDOM.nextBytes(verify);
                 encryptionRequest = new PacketLoginOutEncryptionRequest(hash, pubKey, verify);
+                username = ((PacketLoginInLoginStart) packet).getName();
                 connection.sendPacket(encryptionRequest);
-            } else {
+            /*} else {
                 // Send login success
-            }
+            }*/
         } else if (packet instanceof PacketLoginInEncryptionResponse) {
             PacketLoginInEncryptionResponse p = (PacketLoginInEncryptionResponse) packet;
             final PrivateKey privateKey = EncryptionUtils.getKeys().getPrivate();
@@ -166,6 +171,33 @@ public class ProtocolV5 extends Protocol {
                 Piston.getLogger().severe(ex);
                 disconnect("There was an error whilst logging you in.");
                 return;
+            }
+
+            AuthenticationHandler authHandler = ((PlayerConnectionHandler) connection).getAuthenticationHandler();
+            if (authHandler instanceof YggdrasilAuthenticationHandler) {
+                final YggdrasilAuthenticationHandler handler = (YggdrasilAuthenticationHandler) authHandler;
+                handler.auth(username, hash, new YggdrasilAuthenticationHandler.Callback() {
+
+                    @Override
+                    public void onExecute(boolean success) {
+                        if (success) {
+                            Piston.getLogger().info("Connecting " + username + " to the server... {" + handler.getUUID().toString() + "}");
+                            try {
+                                disconnect(ChatColor.GREEN + "Successfully logged in!");
+                            } catch (Exception e) {
+                                Piston.getLogger().warning(e);
+                            }
+                        } else {
+                            Piston.getLogger().info("Failed to authenticate " + username + ".");
+                            try {
+                                disconnect(ChatColor.RED + "Failed to authenticate.");
+                            } catch (Exception e) {
+                                Piston.getLogger().warning(e);
+                            }
+                        }
+                    }
+
+                });
             }
         }
     }
