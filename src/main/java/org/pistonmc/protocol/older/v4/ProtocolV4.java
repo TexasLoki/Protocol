@@ -35,21 +35,11 @@ public class ProtocolV4 extends Protocol {
 
     public ProtocolV4(Protocol parent, PlayerConnection connection, ProtocolManager manager) {
         super(parent, connection, manager);
+        this.version = 4;
     }
 
     @Override
     public void handle(IncomingPacket packet, ChannelHandlerContext ctx) throws PacketException, IOException {
-        if (packet instanceof PacketStatusInRequest) {
-            ServerListPingEvent event = response();
-            Piston.getEventManager().call(event);
-            if (event.isCancelled()) {
-                return;
-            }
-
-            connection.sendPacket(new PacketStatusOutResponse(event));
-            return;
-        }
-
         if (parent != null) {
             parent.handle(packet, ctx);
         } else {
@@ -66,11 +56,6 @@ public class ProtocolV4 extends Protocol {
     @Override
     public Protocol create(PlayerConnection connection, ProtocolManager manager) {
         return new ProtocolV4(parent != null ? parent : this, connection, manager);
-    }
-
-    @Override
-    public ServerListPingEvent response() {
-        return new ServerListPingEvent(getDescription().getName(), version, 0, 20, ChatColor.AQUA + "A Minecraft Server");
     }
 
 }
