@@ -20,6 +20,7 @@ import org.pistonmc.protocol.v5.login.server.PacketLoginOutDisconnect;
 import org.pistonmc.protocol.v5.login.server.PacketLoginOutEncryptionRequest;
 import org.pistonmc.protocol.v5.login.server.PacketLoginOutLoginSuccess;
 import org.pistonmc.protocol.v5.play.client.*;
+import org.pistonmc.protocol.v5.play.server.PacketPlayOutJoinGame;
 import org.pistonmc.protocol.v5.status.client.PacketStatusInPing;
 import org.pistonmc.protocol.v5.status.client.PacketStatusInRequest;
 import org.pistonmc.protocol.v5.status.server.PacketStatusOutPing;
@@ -44,10 +45,12 @@ import java.security.PrivateKey;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 public class ProtocolV5 extends Protocol {
 
-    private static final Random RANDOM = new Random();
+    private PacketLoginOutEncryptionRequest encryptionRequest;
+    private String username;
 
     public ProtocolV5() {
         super(5);
@@ -97,9 +100,6 @@ public class ProtocolV5 extends Protocol {
         add(new PacketLoginInEncryptionResponse());
     }
 
-    private PacketLoginOutEncryptionRequest encryptionRequest;
-    private String username;
-
     @Override
     public void handle(IncomingPacket packet, ChannelHandlerContext ctx) throws PacketException, IOException {
         if (packet instanceof PacketStatusInRequest) {
@@ -113,12 +113,15 @@ public class ProtocolV5 extends Protocol {
             connection.sendPacket(new PacketStatusOutPing(((PacketStatusInPing) packet).getTime()));
             connection.close();
         } else if (packet instanceof PacketLoginInLoginStart && !Piston.getConfig().getBoolean("settings.offline")) {
-            Piston.getLogger().info("Starting login for " + ((PacketLoginInLoginStart) packet).getName() + "...");
+            PacketLoginInLoginStart start = (PacketLoginInLoginStart) packet;
+            Piston.getLogger().info("Starting login for " + start.getName() + "...");
             byte[] pubKey = EncryptionUtils.generateX509Key(EncryptionUtils.getKeys().getPublic()).getEncoded();
             byte[] verify = EncryptionUtils.generateVerifyToken();
             encryptionRequest = new PacketLoginOutEncryptionRequest("", pubKey, verify);
-            username = ((PacketLoginInLoginStart) packet).getName();
+            username = start.getName();
             connection.sendPacket(encryptionRequest);
+        } else if (packet instanceof PacketLoginInLoginStart) {
+            connect(UUID.randomUUID());
         } else if (packet instanceof PacketLoginInEncryptionResponse) {
             PacketLoginInEncryptionResponse p = (PacketLoginInEncryptionResponse) packet;
             final PrivateKey privateKey = EncryptionUtils.getKeys().getPrivate();
@@ -178,7 +181,8 @@ public class ProtocolV5 extends Protocol {
                         if (success) {
                             Piston.getLogger().info("Connecting " + username + " to the server... {" + handler.getUUID().toString() + "}");
                             try {
-                                disconnect(ChatColor.GREEN + "Successfully logged in!");
+                                // disconnect(ChatColor.GREEN + "Successfully logged in!");
+                                connect(handler.getUUID());
                             } catch (Exception e) {
                                 Piston.getLogger().warning(e);
                             }
@@ -197,11 +201,10 @@ public class ProtocolV5 extends Protocol {
         }
     }
 
-    /*
-    public void connect() {
-        connection.sendPacket(new PacketLoginOutLoginSuccess());
+    public void connect(UUID uuid) throws IOException, PacketException {
+        connection.sendPacket(new PacketLoginOutLoginSuccess(uuid, username));
+        // connection.sendPacket(new PacketPlayOutJoinGame());
     }
-    */
 
     public void disconnect(String reason) throws IOException, PacketException {
         connection.sendPacket(new PacketLoginOutDisconnect(reason, true));
