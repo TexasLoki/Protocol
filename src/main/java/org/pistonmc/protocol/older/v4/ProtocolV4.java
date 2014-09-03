@@ -1,21 +1,16 @@
 package org.pistonmc.protocol.older.v4;
 
 import io.netty.channel.ChannelHandlerContext;
-import org.pistonmc.ChatColor;
-import org.pistonmc.Piston;
-import org.pistonmc.event.connection.ServerListPingEvent;
 import org.pistonmc.exception.protocol.packet.PacketException;
 import org.pistonmc.plugin.protocol.Protocol;
 import org.pistonmc.plugin.protocol.ProtocolManager;
 import org.pistonmc.protocol.PlayerConnection;
 import org.pistonmc.protocol.packet.IncomingPacket;
-import org.pistonmc.protocol.v5.ProtocolV5;
-import org.pistonmc.protocol.v5.login.client.PacketLoginInLoginStart;
-import org.pistonmc.protocol.v5.login.server.PacketLoginOutDisconnect;
-import org.pistonmc.protocol.v5.status.client.PacketStatusInPing;
-import org.pistonmc.protocol.v5.status.client.PacketStatusInRequest;
-import org.pistonmc.protocol.v5.status.server.PacketStatusOutPing;
-import org.pistonmc.protocol.v5.status.server.PacketStatusOutResponse;
+import org.pistonmc.protocol.v47.ProtocolV5;
+import org.pistonmc.protocol.v47.login.client.PacketLoginInLoginStart;
+import org.pistonmc.protocol.v47.login.server.PacketLoginOutDisconnect;
+import org.pistonmc.protocol.v47.status.client.PacketStatusInPing;
+import org.pistonmc.protocol.v47.status.server.PacketStatusOutPing;
 
 import java.io.IOException;
 

@@ -1,5 +1,5 @@
 {
     "name": "StickyPiston 1.7.10",
     "version": "5",
-    "main": "org.pistonmc.protocol.v5.ProtocolV5"
+    "main": "org.pistonmc.protocol.v47.ProtocolV5"
 }
