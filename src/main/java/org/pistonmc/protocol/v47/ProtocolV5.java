@@ -14,12 +14,14 @@ import org.pistonmc.plugin.protocol.ProtocolManager;
 import org.pistonmc.protocol.PlayerConnection;
 import org.pistonmc.protocol.older.v4.ProtocolV4;
 import org.pistonmc.protocol.packet.IncomingPacket;
+import org.pistonmc.protocol.packet.ProtocolState;
 import org.pistonmc.protocol.v47.login.client.PacketLoginInEncryptionResponse;
 import org.pistonmc.protocol.v47.login.client.PacketLoginInLoginStart;
 import org.pistonmc.protocol.v47.login.server.PacketLoginOutDisconnect;
 import org.pistonmc.protocol.v47.login.server.PacketLoginOutEncryptionRequest;
 import org.pistonmc.protocol.v47.login.server.PacketLoginOutLoginSuccess;
 import org.pistonmc.protocol.v47.play.client.*;
+import org.pistonmc.protocol.v47.play.server.PacketPlayOutDisconnect;
 import org.pistonmc.protocol.v47.status.client.PacketStatusInPing;
 import org.pistonmc.protocol.v47.status.client.PacketStatusInRequest;
 import org.pistonmc.protocol.v47.status.server.PacketStatusOutPing;
@@ -165,7 +167,7 @@ public class ProtocolV5 extends Protocol {
                 return;
             }
 
-            AuthenticationHandler authHandler = ((PlayerConnectionHandler) connection).getAuthenticationHandler();
+            AuthenticationHandler authHandler = ((PlayerConnectionHandler) connection).getAuthenticator();
             if (authHandler instanceof YggdrasilAuthenticationHandler) {
                 final YggdrasilAuthenticationHandler handler = (YggdrasilAuthenticationHandler) authHandler;
                 handler.auth(username, hash, new YggdrasilAuthenticationHandler.Callback() {
@@ -200,8 +202,18 @@ public class ProtocolV5 extends Protocol {
         // connection.sendPacket(new PacketPlayOutJoinGame());
     }
 
-    public void disconnect(String reason) throws IOException, PacketException {
-        connection.sendPacket(new PacketLoginOutDisconnect(reason, true));
+    public void disconnect(String message) {
+        ProtocolState state = connection.getState();
+        try {
+            if (state == ProtocolState.LOGIN) {
+                connection.sendPacket(new PacketLoginOutDisconnect(message, true));
+            } else if (state == ProtocolState.PLAY) {
+                connection.sendPacket(new PacketPlayOutDisconnect(message, true));
+            }
+        } catch (Exception ex) {
+            getLogger().log("Could not send disconnect packet: ", ex);
+        }
+
         connection.close();
     }
 
